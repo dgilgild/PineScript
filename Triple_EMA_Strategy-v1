@@ -1,0 +1,31 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Arlekin999
+//@version=6
+strategy('Triple EMA Strategy', overlay = true)
+
+// Define the EMA periods
+fastLength = 7
+mediumLength = 14
+slowLength = 28
+
+// Calculate the EMAs
+fastEMA = ta.ema(close, fastLength)
+mediumEMA = ta.ema(close, mediumLength)
+slowEMA = ta.ema(close, slowLength)
+
+// Plot the EMAs
+plot(fastEMA, color = color.yellow, title = 'Fast EMA (7)')
+plot(mediumEMA, color = color.blue, title = 'Medium EMA (14)')
+plot(slowEMA, color = color.red, title = 'Slow EMA (28)')
+
+// Define entry conditions
+prelongCondition = ta.crossover(fastEMA, mediumEMA)
+if prelongCondition
+    longCondition = ta.crossover(fastEMA, slowEMA)
+    if longCondition
+        strategy.entry('Long', strategy.long)
+
+// Define exit condition
+exitCondition = ta.crossunder(fastEMA, mediumEMA)
+if exitCondition
+    strategy.close('Long')
